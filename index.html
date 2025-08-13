@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>#FichaYanis — Kzx & Zx On Top</title>
+<style>
+  /* ====== RESET + BASE ====== */
+  * { box-sizing: border-box; }
+  :root{
+    --bg:#05060a;
+    --text:#e6f1ff;
+    --muted:#8aa0b3;
+    --neon:#00ffd0;
+    --neon2:#0ff;
+    --danger:#ff3b3b;
+    --card:#0a0e14;
+    --accent:#7df9ff;
+  }
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    overflow-x:hidden;
+  }
+
+  /* ====== CYBER GRID BACKGROUND (CSS only) ====== */
+  .grid-bg::before,
+  .grid-bg::after{
+    content:"";
+    position:fixed; inset:0; pointer-events:none;
+  }
+  /* animated grid */
+  .grid-bg::before{
+    background:
+      linear-gradient(transparent 95%, rgba(0,255,208,.22) 96%) 0 0/100% 30px,
+      linear-gradient(90deg, transparent 95%, rgba(0,255,208,.22) 96%) 0 0/30px 100%;
+    mix-blend-mode: screen;
+    animation: pan 18s linear infinite;
+    opacity:.25;
+  }
+  @keyframes pan{ to{ transform: translate3d(-30px,-30px,0); } }
+
+  /* subtle scanlines */
+  .grid-bg::after{
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,.0), rgba(0,0,0,.0) 2px, rgba(0,0,0,.25) 3px);
+    opacity:.6;
+  }
+
+  /* ====== CONTAINER ====== */
+  .wrap{
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 64px 20px 32px;
+  }
+
+  /* ====== TITLE with GLITCH ====== */
+  .title{
+    font-size: clamp(34px, 5vw, 64px);
+    letter-spacing:.04em;
+    position: relative;
+    display:inline-block;
+    text-shadow:
+      0 0 6px var(--neon),
+      0 0 18px rgba(0,255,208,.6);
+  }
+  .title::before, .title::after{
+    content: attr(data-text);
+    position: absolute; inset:0;
+    clip-path: inset(0 0 0 0);
+    filter: blur(.5px);
+  }
+  .title::before{
+    color: var(--neon2);
+    transform: translate(-2px,0);
+    mix-blend-mode: screen;
+    animation: glitch1 2.2s infinite linear alternate-reverse;
+  }
+  .title::after{
+    color: var(--danger);
+    transform: translate(2px,0);
+    mix-blend-mode: screen;
+    animation: glitch2 1.8s infinite linear alternate-reverse;
+  }
+  @keyframes glitch1{
+    0%{ clip-path: inset(0 0 85% 0); }
+    20%{ clip-path: inset(0 0 10% 0); }
+    40%{ clip-path: inset(0 0 60% 0); }
+    60%{ clip-path: inset(0 0 30% 0); }
+    80%{ clip-path: inset(0 0 50% 0); }
+    100%{ clip-path: inset(0 0 5% 0); }
+  }
+  @keyframes glitch2{
+    0%{ clip-path: inset(85% 0 0 0); }
+    25%{ clip-path: inset(10% 0 0 0); }
+    50%{ clip-path: inset(60% 0 0 0); }
+    75%{ clip-path: inset(30% 0 0 0); }
+    100%{ clip-path: inset(50% 0 0 0); }
+  }
+
+  /* ====== CYBER BANNER ====== */
+  .banner{
+    margin-top: 8px;
+    display:inline-block;
+    padding: 6px 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing:.2em;
+    border: 1px solid rgba(125,249,255,.3);
+    background: linear-gradient(90deg, rgba(125,249,255,.12), transparent);
+    box-shadow: 0 0 12px rgba(0,255,208,.15) inset;
+  }
+
+  /* ====== GALLERY ====== */
+  .gallery{
+    margin: 36px 0 24px;
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap:16px;
+  }
+  .card{
+    background: linear-gradient(180deg, rgba(125,249,255,.06), rgba(0,0,0,.0));
+    border:1px solid rgba(125,249,255,.25);
+    border-radius: 14px;
+    padding:10px;
+    position:relative;
+    overflow:hidden;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .card:hover{ transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 0 24px rgba(0,255,208,.2); }
+  .card img{
+    width:100%; height:320px; object-fit:cover; border-radius:10px;
+    filter: contrast(1.05) saturate(1.05);
+  }
+  .card .tag{
+    position:absolute; top:10px; left:10px;
+    font-size:12px; padding:4px 8px;
+    background: rgba(0,0,0,.55);
+    border:1px solid rgba(125,249,255,.35);
+    border-radius: 6px;
+    backdrop-filter: blur(2px);
+  }
+
+  /* ====== "ESPACE ÉCRITURE" ====== */
+  .note{
+    margin-top: 18px;
+    padding:16px;
+    background: var(--card);
+    border:1px solid rgba(125,249,255,.25);
+    border-radius:12px;
+    position:relative;
+  }
+  .note h2{
+    margin:0 0 8px 0;
+    font-size:16px;
+    letter-spacing:.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .note small{ color: var(--muted); }
+  textarea{
+    width:100%;
+    min-height: 160px;
+    margin-top:12px;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid rgba(125,249,255,.2);
+    background: #070a0f;
+    color: var(--text);
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  textarea:focus{ border-color: var(--accent); box-shadow: 0 0 0 3px rgba(125,249,255,.15); }
+
+  .actions{
+    margin-top: 10px;
+    display:flex; gap:10px; flex-wrap: wrap;
+  }
+  .btn{
+    border:1px solid rgba(125,249,255,.35);
+    background: linear-gradient(90deg, rgba(125,249,255,.18), rgba(0,0,0,.0));
+    color: var(--text);
+    padding:10px 14px; border-radius:10px;
+    cursor:pointer; font-weight:600; letter-spacing:.04em;
+    transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .btn:hover{ transform: translateY(-1px); border-color: var(--accent); box-shadow: 0 0 16px rgba(0,255,208,.18); }
+
+  /* ====== FOOTER ====== */
+  footer{
+    margin: 40px 0 20px;
+    text-align:center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* ====== CANVAS LAYER ====== */
+  #matrix{
+    position: fixed; inset:0; z-index:-1; opacity:.35; pointer-events:none;
+    filter: blur(.3px) contrast(130%);
+  }
+
+  /* ====== RESPONSIVE SPACING ====== */
+  .spacer{ height: 10px; }
+</style>
+</head>
+<body class="grid-bg">
+<canvas id="matrix"></canvas>
+
+  <div class="wrap">
+    <h1 class="title" data-text="#FichaYanis">#FichaYanis</h1>
+    <div class="banner">Kzx / Zx On TOPP</div>
+
+    <div class="gallery">
+      <figure class="card">
+        <span class="tag">FichaYanis</span>
+        <img src="FichaYanis.png" alt="Image FichaYanis" />
+      </figure>
+      <figure class="card">
+        <span class="tag">FichaYanis2</span>
+        <img src="FichaYanis2.png" alt="Image FichaYanis2" />
+      </figure>
+    </div>
+
+    <section class="note">
+      <h2>Espace écriture</h2>
+      <small>Tu peux éditer le texte librement ci-dessous.</small>
+      <textarea id="pad">Ficha par la Kzx et Zx
+Cause : Moquerie des violes envers les meufs.</textarea>
+
+      <div class="actions">
+        <button class="btn" id="save">Sauvegarder (local)</button>
+        <button class="btn" id="clear">Réinitialiser</button>
+        <button class="btn" id="copy">Copier</button>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+
+    <footer>By UnknownNet</footer>
+  </div>
+
+<script>
+/* ====== Simple “Matrix rain” canvas background ====== */
+(function(){
+  const c = document.getElementById('matrix');
+  const ctx = c.getContext('2d');
+  let W, H, cols, drops, chars;
+
+  function init(){
+    W = c.width = window.innerWidth;
+    H = c.height = window.innerHeight;
+    const fontSize = 16;
+    cols = Math.floor(W / fontSize);
+    drops = Array(cols).fill(1 + Math.random()*10);
+    chars = '01#XY<>[]{}$%&@=+*'.split('');
+  }
+
+  function draw(){
+    // fade trail
+    ctx.fillStyle = 'rgba(5,6,10,0.25)';
+    ctx.fillRect(0,0,W,H);
+
+    ctx.fillStyle = '#00ffd0';
+    ctx.font = '16px monospace';
+
+    for (let i=0;i<cols;i++){
+      const txt = chars[Math.floor(Math.random()*chars.length)];
+      const x = i*16;
+      const y = drops[i]*16;
+
+      ctx.fillText(txt, x, y);
+
+      if (y > H && Math.random() > 0.975){ drops[i] = 0; }
+      drops[i]++;
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  init(); draw();
+  window.addEventListener('resize', init);
+})();
+
+/* ====== Pad actions (localStorage) ====== */
+(function(){
+  const pad = document.getElementById('pad');
+  const KEY = 'fichaYanis_pad';
+  const saved = localStorage.getItem(KEY);
+  if(saved !== null){ pad.value = saved; }
+
+  document.getElementById('save').addEventListener('click', () => {
+    localStorage.setItem(KEY, pad.value);
+    flash('Texte sauvegardé localement.');
+  });
+
+  document.getElementById('clear').addEventListener('click', () => {
+    pad.value = 'Ficha par la Kzx et Zx\nCause : Moquerie des violes envers les meufs.';
+    flash('Texte réinitialisé.');
+  });
+
+  document.getElementById('copy').addEventListener('click', async () => {
+    try{
+      await navigator.clipboard.writeText(pad.value);
+      flash('Copié dans le presse-papiers.');
+    }catch(e){
+      flash('Impossible de copier ici, désolé.');
+    }
+  });
+
+  function flash(msg){
+    const b = document.createElement('div');
+    b.textContent = msg;
+    b.style.position='fixed';
+    b.style.bottom='18px';
+    b.style.left='50%';
+    b.style.transform='translateX(-50%)';
+    b.style.padding='10px 14px';
+    b.style.background='rgba(0,0,0,.65)';
+    b.style.border='1px solid rgba(125,249,255,.35)';
+    b.style.borderRadius='10px';
+    b.style.color='#e6f1ff';
+    b.style.font='12px monospace';
+    b.style.zIndex=9999;
+    document.body.appendChild(b);
+    setTimeout(()=> b.remove(), 1800);
+  }
+})();
+</script>
+</body>
+</html>
